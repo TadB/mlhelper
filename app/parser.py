@@ -31,7 +31,7 @@ def save_image(url):
     filename = folder+t_stamp+url.split('/')[-1]
     basedir = os.path.abspath(os.path.dirname(__file__))
     # saving image
-    r = requests.get(url)
+    img = requests.get(url)
     with open(os.path.join(basedir, filename), 'wb') as f:
-        f.write(r.content)
+        f.write(img.content)
     return filename
