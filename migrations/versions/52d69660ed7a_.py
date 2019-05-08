@@ -1,8 +1,8 @@
-"""Image and Content tables
+"""empty message
 
-Revision ID: 7b7a8c7617aa
+Revision ID: 52d69660ed7a
 Revises: 
-Create Date: 2019-05-04 17:53:36.500847
+Create Date: 2019-05-09 00:20:10.238761
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7b7a8c7617aa'
+revision = '52d69660ed7a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('content',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(length=128), nullable=True),
-    sa.Column('text', sa.Text(), nullable=False),
+    sa.Column('text', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_content_url'), 'content', ['url'], unique=True)
