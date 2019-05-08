@@ -17,8 +17,11 @@ def test_download_resources():
     pass
 
 
-def test_add_images():
-    pass
+def test_add_images(client):
+    response = client.post('/add/img',
+                           data=json.dumps(dict(url=web_url)),
+                           content_type='application/json')
+    assert b'Images added to database' in response.data
 
 
 def test_check_add_content_status_done():
