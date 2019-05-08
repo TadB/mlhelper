@@ -75,6 +75,9 @@ venv.bak/
 # Data base files
 *.db
 *.sqlite3
+# application stored images - db
+app/images/
+tests/testimages/
 
 # Local files
 todo.md

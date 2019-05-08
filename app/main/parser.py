@@ -1,9 +1,9 @@
 import os
-
 from bs4 import BeautifulSoup
 import requests
 from urllib.request import urlretrieve
 from datetime import datetime
+from flask import current_app as app
 
 
 def get_website_content(url):
@@ -28,10 +28,10 @@ def save_image(url):
     # add time stamp to avoid image path collision
     t_stamp = datetime.utcnow().strftime('%y%m%d%H%M%S')
     folder = 'images/'
-    filename = folder+t_stamp+url.split('/')[-1]
+    filename = t_stamp+url.split('/')[-1]
     basedir = os.path.abspath(os.path.dirname(__file__))
     # saving image
     img = requests.get(url)
-    with open(os.path.join(basedir, filename), 'wb') as f:
+    with open(os.path.join(app.config['IMAGES_FOLDER'], filename), 'wb') as f:
         f.write(img.content)
     return filename

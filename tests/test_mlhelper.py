@@ -21,7 +21,9 @@ def test_add_images(client):
     response = client.post('/add/img',
                            data=json.dumps(dict(url=web_url)),
                            content_type='application/json')
+    # TODO: change saving test images to main application images folder
     assert b'Images added to database' in response.data
+
 
 
 def test_check_add_content_status_done():

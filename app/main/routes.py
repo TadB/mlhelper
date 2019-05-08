@@ -1,8 +1,7 @@
 from app import db
-from mlhelper import app
 from app.models import Content, Image
 from flask import request, jsonify
-from app.parser import get_website_content, save_image, get_images
+from app.main.parser import get_website_content, save_image, get_images
 from app.main import bp
 
 
@@ -41,9 +40,23 @@ def add_images():
         content = Content(url=web_url)
         db.session.add(content)
     # add image paths to database and save to storage
+    # TODO: check if images for url already exists
     for img_url in get_images(web_url):
         img_path = save_image(img_url)
         img = Image(content_id=content.id, path=img_path)
         db.session.add(img)
     db.session.commit()
     return jsonify({'msg': 'Images added to database'})
+
+
+@bp.route('/download', methods=['GET'])
+def download():
+    website = request.get_json()
+    web_url = website['url']
+    content = Content.query.filter_by(url=web_url).first()
+    if content is None:
+        return jsonify({'msg': 'Data for this url does not exits '})
+    images = Image.query.filter_by(content_id=content.id)
+
+
+
