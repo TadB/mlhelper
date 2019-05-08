@@ -15,5 +15,10 @@ def get_website_content(url):
 def get_images(url):
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
-    for img in soup.find_all('img'):
-        yield img['src']
+    for post in soup.find_all(class_='post'):
+        for img in post.find_all('img'):
+            yield img['src']
+
+
+def save_image(url):
+    pass
