@@ -1,5 +1,9 @@
+import os
+
 from bs4 import BeautifulSoup
 import requests
+from urllib.request import urlretrieve
+from datetime import datetime
 
 
 def get_website_content(url):
@@ -21,4 +25,13 @@ def get_images(url):
 
 
 def save_image(url):
-    pass
+    # add time stamp to avoid image path collision
+    t_stamp = datetime.utcnow().strftime('%y%m%d%H%M%S')
+    folder = 'images/'
+    filename = folder+t_stamp+url.split('/')[-1]
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    # saving image
+    r = requests.get(url)
+    with open(os.path.join(basedir, filename), 'wb') as f:
+        f.write(r.content)
+    return filename
