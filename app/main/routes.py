@@ -1,6 +1,11 @@
+import io
+import zipfile
+import os
+from os.path import basename
+from tempfile import NamedTemporaryFile
 from app import db
 from app.models import Content, Image
-from flask import request, jsonify
+from flask import request, jsonify, current_app as app, send_file
 from app.main.parser import get_website_content, save_image, get_images
 from app.main import bp
 
@@ -13,7 +18,7 @@ def add_content():
     content = Content.query.filter_by(url=web_url).first()
     if content is not None:
         # update existing object
-        if content.text is not None:
+        if content.text is None:
             content.text = web_text
         else:
             # content text exists
@@ -56,7 +61,14 @@ def download():
     content = Content.query.filter_by(url=web_url).first()
     if content is None:
         return jsonify({'msg': 'Data for this url does not exits '})
-    images = Image.query.filter_by(content_id=content.id)
-
+    images = Image.query.filter_by(content_id=content.id).all()
+    data = io.BytesIO()
+    with zipfile.ZipFile(data, mode='w') as zf:
+        zf.writestr('web_text.txt', content.text)
+        for img_path in images:
+            file = os.path.join(app.config['IMAGES_FOLDER'], img_path.path)
+            zf.write(file, basename(file))
+    data.seek(0)
+    return send_file(data,  mimetype='application/zip', attachment_filename='resources.zip', as_attachment=True)
 
 
