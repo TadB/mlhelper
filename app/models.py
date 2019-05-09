@@ -29,7 +29,7 @@ class Content(db.Model):
 
     def get_task_in_progress(self, name):
         return Task.query.filter_by(name=name, content=self,
-                                    complete=False).all().first()
+                                    complete=False).first()
 
 
 class Task(db.Model):

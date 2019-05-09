@@ -8,9 +8,9 @@ def test_add_content(client):
         "/add/text", data=json.dumps(dict(url=web_url)), content_type="application/json"
     )
 
-    # assert b'Task successfully added to queue' in response.data
+    assert b'Task successfully added to queue' in response.data
     # testing before adding tasks to queue option
-    assert b"Text added to database" in response.data
+    # assert b"Text added to database" in response.data
 
 
 def test_download_resources():

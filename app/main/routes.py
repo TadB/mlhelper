@@ -25,6 +25,22 @@ def add_content():
     return result
 
 
+@bp.route("/add/text/check", methods=["GET"])
+def check_add_content_status():
+    website = request.get_json()
+    web_url = website["url"]
+    content = Content.query.filter_by(url=web_url).first()
+    if content is None:
+        ret_data = {"msg": "Task do not exist"}
+        return jsonify(ret_data)
+    if content.get_task_in_progress('add_content') is None:
+        ret_data = {"msg": "Add content is done"}
+    else:
+        ret_data = {"msg": "Task in progress"}
+    return jsonify(ret_data)
+
+
+
 @bp.route("/add/img", methods=["POST"])
 def add_images():
     website = request.get_json()
