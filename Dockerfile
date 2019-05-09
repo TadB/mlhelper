@@ -6,12 +6,12 @@ WORKDIR /home/mlhelper
 
 COPY requirements.txt requirements.txt
 RUN python -m venv venv
-RUN venv/bin/pip install -r requirements.txt \
-RUN venv/bin/pip install gunicorn \
+RUN venv/bin/pip install -r requirements.txt
+RUN venv/bin/pip install gunicorn
 
 COPY app app
 COPY migrations migrations
-COPY mlhelper.py config.py ./
+COPY mlhelper.py config.py boot.sh ./
 RUN chmod a+x boot.sh
 
 ENV FLASK_APP mlhelper.py

@@ -1,6 +1,6 @@
 python version 3.7
 
-install:  
+install locally:  
 ```
 pip install -r requirements.txt
 export FLASK_APP="mlhelper.py"
@@ -8,8 +8,16 @@ flask db upgrade
 
 ```
 
-run: \
+run locally:\
 `flask run`
+
+docker:
+```
+docker run --name redis -d -p 6379:6379 redis:5-alpine
+docker build -t mlhelper:latest . 
+docker run --name mlhelper -d -p 8000:5000 --rm --link redis:redis-server -e REDIS_URL=redis://redis-server:6379/0 mlhelper:latest
+docker run --name rq-worker -d --rm --link redis:redis-server -e REDIS_URL=redis://redis-server:6379/0 --entrypoint venv/bin/rq mlhelper:latest worker -u redis://redis-server:6379/0 mlhelper-tasks
+```
 
 ## Decisions:
 - Relational DATABASE 
