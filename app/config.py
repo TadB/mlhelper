@@ -10,3 +10,4 @@ class Config(object):
     ) or "sqlite:///" + os.path.join(basedir, "app.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     IMAGES_FOLDER = os.path.join(basedir, "images/")
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'

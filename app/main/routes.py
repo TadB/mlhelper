@@ -5,7 +5,7 @@ from os.path import basename
 from app import db
 from app.models import Content, Image
 from flask import request, jsonify, current_app as app, send_file
-from app.main.parser import get_website_content, save_image, get_images
+from app.main.parser import save_image, get_images
 from app.main import bp
 
 
@@ -13,23 +13,14 @@ from app.main import bp
 def add_content():
     website = request.get_json()
     web_url = website["url"]
-    web_text = get_website_content(web_url)
     content = Content.query.filter_by(url=web_url).first()
-    if content is not None:
-        # update existing object
-        if content.text is None:
-            content.text = web_text
-        else:
-            # content text exists
-            ret_data = {"msg": "Text for this website already exists in db"}
-            return jsonify(ret_data)
-    else:
-        # create new entry
-        content = Content(text=web_text, url=web_url)
+    if content is None:
+        content = Content(url=web_url)
         db.session.add(content)
+        db.session.commit()
+    content.launch_task('add_content')
     db.session.commit()
-    # ret_data = {'msg': 'Task successfully added to queue'}
-    ret_data = {"msg": "Text added to database"}
+    ret_data = {"msg": "Task successfully added to queue"}
     result = jsonify(ret_data)
     return result
 

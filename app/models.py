@@ -23,7 +23,7 @@ class Content(db.Model):
     def launch_task(self, name, *args, **kwargs):
         rq_job = current_app.task_queue.enqueue('app.tasks.' + name, self.id,
                                                 *args, **kwargs)
-        task = Task(id=rq_job.get_id(), name=name, user=self)
+        task = Task(id=rq_job.get_id(), name=name, content=self)
         db.session.add(task)
         return task
 
