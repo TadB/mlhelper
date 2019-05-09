@@ -11,7 +11,7 @@ class TestConfig(Config):
     # in-memory SQLite database
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     TESTING = True
-    IMAGES_FOLDER = os.path.join(basedir, 'testimages/')
+    IMAGES_FOLDER = os.path.join(basedir, "testimages/")
 
 
 @pytest.fixture(scope="module")
