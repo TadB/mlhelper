@@ -40,7 +40,6 @@ def check_add_content_status():
     return jsonify(ret_data)
 
 
-
 @bp.route("/add/img", methods=["POST"])
 def add_images():
     website = request.get_json()
@@ -50,14 +49,11 @@ def add_images():
         # content not created yet
         content = Content(url=web_url)
         db.session.add(content)
-    # add image paths to database and save to storage
-    # TODO: check if images for url already exists
-    for img_url in get_images(web_url):
-        img_path = save_image(img_url)
-        img = Image(content_id=content.id, path=img_path)
-        db.session.add(img)
+        db.session.commit()
+    content.launch_task('add_images')
     db.session.commit()
-    return jsonify({"msg": "Images added to database"})
+    ret_data = {"msg": "Task successfully added to queue"}
+    return jsonify(ret_data)
 
 
 @bp.route("/download", methods=["GET"])
