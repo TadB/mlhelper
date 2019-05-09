@@ -5,7 +5,6 @@ from os.path import basename
 from app import db
 from app.models import Content, Image
 from flask import request, jsonify, current_app as app, send_file
-from app.main.parser import save_image, get_images
 from app.main import bp
 
 
@@ -36,7 +35,7 @@ def check_add_content_status():
     if content.get_task_in_progress('add_content') is None:
         ret_data = {"msg": "Add content is done"}
     else:
-        ret_data = {"msg": "Task in progress"}
+        ret_data = {"msg": "Add content in progress"}
     return jsonify(ret_data)
 
 
@@ -56,6 +55,21 @@ def add_images():
     return jsonify(ret_data)
 
 
+@bp.route("/add/img/check", methods=["GET"])
+def check_add_images_status():
+    website = request.get_json()
+    web_url = website["url"]
+    content = Content.query.filter_by(url=web_url).first()
+    if content is None:
+        ret_data = {"msg": "Task do not exist"}
+        return jsonify(ret_data)
+    if content.get_task_in_progress('add_images') is None:
+        ret_data = {"msg": "Add images is done"}
+    else:
+        ret_data = {"msg": "Add images in progress"}
+    return jsonify(ret_data)
+
+
 @bp.route("/download", methods=["GET"])
 def download():
     website = request.get_json()
@@ -66,6 +80,7 @@ def download():
     images = Image.query.filter_by(content_id=content.id).all()
     data = io.BytesIO()
     with zipfile.ZipFile(data, mode="w") as zf:
+        # create file only in zip archive
         zf.writestr("web_text.txt", content.text)
         for img_path in images:
             file = os.path.join(app.config["IMAGES_FOLDER"], img_path.path)

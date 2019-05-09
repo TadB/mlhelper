@@ -5,12 +5,11 @@ web_url = "https://niebezpiecznik.pl/post/nic-nie-jest-bezpieczne-jesli-nie-zabe
 
 def test_add_content(client):
     response = client.post(
-        "/add/text", data=json.dumps(dict(url=web_url)), content_type="application/json"
+        "/add/text", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
     )
 
     assert b'Task successfully added to queue' in response.data
-    # testing before adding tasks to queue option
-    # assert b"Text added to database" in response.data
 
 
 def test_download_resources():
@@ -19,23 +18,39 @@ def test_download_resources():
 
 def test_add_images(client):
     response = client.post(
-        "/add/img", data=json.dumps(dict(url=web_url)), content_type="application/json"
+        "/add/img", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
     )
-    # TODO: change saving test images to main application images folder
-    assert b"Images added to database" in response.data
+    assert b"Task successfully added to queue" in response.data
 
 
-def test_check_add_content_status_done():
-    pass
+def test_check_add_content_status_done(client):
+    response = client.get(
+        "/add/text/check", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
+    )
+    assert b"Add content is done" in response.data
 
 
-def test_check_add_content_status_in_progress():
-    pass
+def test_check_add_content_status_in_progress(client):
+    response = client.get(
+        "/add/text/check", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
+    )
+    assert b"Add content in progress" in response.data
 
 
-def test_check_add_images_status_done():
-    pass
+def test_check_add_images_status_done(client):
+    response = client.get(
+        "/add/img/check", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
+    )
+    assert b"Add images is done" in response.data
 
 
-def test_check_add_images_status_in_progress():
-    pass
+def test_check_add_images_status_in_progress(client):
+    response = client.get(
+        "/add/img/check", data=json.dumps(dict(url=web_url)),
+        content_type="application/json"
+    )
+    assert b"Add images in progress" in response.data
