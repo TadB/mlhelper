@@ -1,8 +1,7 @@
 from flask import Flask
 from redis import Redis
 import rq
-
-from .config import Config
+from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 

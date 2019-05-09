@@ -1,7 +1,7 @@
 import pytest
 import os
 from app import create_app, db
-from app.config import Config
+from config import Config
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
